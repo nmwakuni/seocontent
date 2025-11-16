@@ -7,7 +7,7 @@ import Link from "next/link"
 import { useSession } from "@/lib/auth-client"
 
 export default function DashboardPage() {
-  const { data: session } = useSession()
+  const session = useSession()
 
   const stats = [
     {
@@ -46,7 +46,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
-            Welcome back, {session?.user?.name?.split(" ")[0] || "there"}!
+            Welcome back, {session.data?.user?.name?.split(" ")[0] || "there"}!
           </h1>
           <p className="text-muted-foreground mt-2">
             Here's what's happening with your SEO content today.

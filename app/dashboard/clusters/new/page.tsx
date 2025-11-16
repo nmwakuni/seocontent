@@ -19,7 +19,7 @@ const clusterSchema = z.object({
   projectId: z.string().min(1, "Please select a project"),
   pillarTopic: z.string().min(3, "Topic must be at least 3 characters"),
   keywords: z.string().min(3, "Please enter at least one keyword"),
-  numberOfArticles: z.number().min(3).max(20).default(10),
+  numberOfArticles: z.coerce.number().min(3).max(20).default(10),
 })
 
 type ClusterForm = z.infer<typeof clusterSchema>
@@ -45,7 +45,7 @@ export default function NewClusterPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<ClusterForm>({
+  } = useForm({
     resolver: zodResolver(clusterSchema),
     defaultValues: {
       projectId: searchParams.get("project") || "",

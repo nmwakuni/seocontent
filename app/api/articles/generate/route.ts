@@ -107,7 +107,7 @@ ARTICLE_CONTENT:
     let articleContent = ""
 
     // Extract meta description
-    const metaMatch = responseText.match(/META_DESCRIPTION:\s*(.+?)(?:\n|ARTICLE_CONTENT:)/s)
+    const metaMatch = responseText.match(/META_DESCRIPTION:\s*([\s\S]+?)(?:\n|ARTICLE_CONTENT:)/)
     if (metaMatch) {
       metaDescription = metaMatch[1].trim()
     }

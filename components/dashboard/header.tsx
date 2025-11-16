@@ -14,7 +14,7 @@ import { useSession, signOut } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 
 export function DashboardHeader() {
-  const { data: session } = useSession()
+  const session = useSession()
   const router = useRouter()
 
   const handleSignOut = async () => {
@@ -22,9 +22,9 @@ export function DashboardHeader() {
     router.push("/")
   }
 
-  const userInitials = session?.user?.name
+  const userInitials = session.data?.user?.name
     ?.split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .toUpperCase() || "U"
 
@@ -38,13 +38,13 @@ export function DashboardHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-3 rounded-lg hover:bg-muted p-2">
             <div className="text-right text-sm">
-              <p className="font-medium">{session?.user?.name || "User"}</p>
+              <p className="font-medium">{session.data?.user?.name || "User"}</p>
               <p className="text-xs text-muted-foreground">
-                {session?.user?.email}
+                {session.data?.user?.email}
               </p>
             </div>
             <Avatar>
-              <AvatarImage src={session?.user?.image || ""} />
+              <AvatarImage src={session.data?.user?.image || ""} />
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
