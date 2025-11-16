@@ -19,11 +19,25 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { projectId, title, keywords, outline } = body
+    const { projectId, title, keywords, outline, model = "claude-3-5-sonnet-20241022" } = body
 
     if (!projectId || !title || !keywords) {
       return NextResponse.json(
         { error: "Missing required fields" },
+        { status: 400 }
+      )
+    }
+
+    // Validate model
+    const validModels = [
+      "claude-3-5-sonnet-20241022",
+      "claude-3-opus-20240229",
+      "claude-3-haiku-20240307",
+    ]
+
+    if (!validModels.includes(model)) {
+      return NextResponse.json(
+        { error: "Invalid AI model selected" },
         { status: 400 }
       )
     }
@@ -83,9 +97,9 @@ META_DESCRIPTION: [your meta description here]
 ARTICLE_CONTENT:
 [your article content in markdown]`
 
-    // Call Claude API
+    // Call Claude API with selected model
     const message = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model,
       max_tokens: 16000,
       messages: [
         {

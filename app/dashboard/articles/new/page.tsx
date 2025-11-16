@@ -22,6 +22,7 @@ const articleSchema = z.object({
   title: z.string().min(10, "Title must be at least 10 characters"),
   keywords: z.string().min(3, "Please enter at least one keyword"),
   outline: z.string().optional(),
+  model: z.string().min(1),
 })
 
 type ArticleForm = z.infer<typeof articleSchema>
@@ -53,6 +54,7 @@ function NewArticleContent() {
     resolver: zodResolver(articleSchema),
     defaultValues: {
       projectId: "",
+      model: "claude-3-5-sonnet-20241022",
     },
   })
 
@@ -238,6 +240,31 @@ function NewArticleContent() {
                 />
                 <p className="text-xs text-muted-foreground">
                   Provide a custom outline for the article
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="model">
+                  AI Model <span className="text-destructive">*</span>
+                </Label>
+                <select
+                  id="model"
+                  {...register("model")}
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={isGenerating}
+                >
+                  <option value="claude-3-5-sonnet-20241022">
+                    Claude 3.5 Sonnet (Recommended)
+                  </option>
+                  <option value="claude-3-opus-20240229">
+                    Claude 3 Opus (Higher Quality)
+                  </option>
+                  <option value="claude-3-haiku-20240307">
+                    Claude 3 Haiku (Faster)
+                  </option>
+                </select>
+                <p className="text-xs text-muted-foreground">
+                  Choose the AI model for content generation
                 </p>
               </div>
 
