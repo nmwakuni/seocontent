@@ -12,7 +12,8 @@ import {
   Settings,
   Sparkles,
   LogOut,
-  CreditCard
+  CreditCard,
+  TrendingUp
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { signOut } from "@/lib/auth-client"
@@ -24,6 +25,7 @@ const navigation = [
   { name: "Keyword Research", href: "/dashboard/keywords", icon: Search },
   { name: "Content Clusters", href: "/dashboard/clusters", icon: BarChart3 },
   { name: "Articles", href: "/dashboard/articles", icon: FileText },
+  { name: "Analytics", href: "/dashboard/analytics", icon: TrendingUp },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ]

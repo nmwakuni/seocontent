@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { subscriptions } from "@/lib/db/schema"
+import { subscriptions, users } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
+import { sendPaymentConfirmationEmail } from "@/lib/email"
 
 /**
  * M-Pesa STK Push Callback Handler
@@ -72,6 +73,25 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date(),
         })
         .where(eq(subscriptions.id, subscription.id))
+
+      // Get user details and send confirmation email
+      const user = await db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.id, subscription.userId),
+      })
+
+      if (user) {
+        sendPaymentConfirmationEmail({
+          name: user.name || "User",
+          email: user.email,
+          plan: subscription.plan,
+          amount: subscription.amount || 0,
+          currency: subscription.currency || "KES",
+          paymentMethod: "mpesa",
+          receiptNumber,
+        }).catch((error) => {
+          console.error("Failed to send payment confirmation email:", error)
+        })
+      }
     } else {
       // Payment failed or cancelled
       newStatus = "cancelled"

@@ -158,3 +158,34 @@ export const usageTracking = pgTable("usage_tracking", {
 }, (table) => ({
   userMonthIdx: index("usage_user_month_idx").on(table.userId, table.month),
 }))
+
+// Team members - for project collaboration
+export const teamMembers = pgTable("team_members", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }).notNull(),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  role: varchar("role", { length: 20 }).notNull().default("viewer"), // admin, editor, viewer
+  invitedBy: uuid("invited_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => ({
+  projectUserIdx: index("team_member_project_user_idx").on(table.projectId, table.userId),
+  userIdx: index("team_member_user_idx").on(table.userId),
+}))
+
+// Team invitations - pending invites to join projects
+export const teamInvitations = pgTable("team_invitations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  role: varchar("role", { length: 20 }).notNull().default("viewer"),
+  invitedBy: uuid("invited_by").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  token: varchar("token", { length: 255 }).notNull().unique(),
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, accepted, expired
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => ({
+  projectIdx: index("team_invitation_project_idx").on(table.projectId),
+  emailIdx: index("team_invitation_email_idx").on(table.email),
+  tokenIdx: index("team_invitation_token_idx").on(table.token),
+}))
