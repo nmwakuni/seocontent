@@ -124,7 +124,18 @@ export const subscriptions = pgTable("subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull().unique(),
   plan: varchar("plan", { length: 50 }).notNull(), // free, starter, pro, enterprise
-  status: varchar("status", { length: 50 }).notNull(), // active, cancelled, past_due
+  status: varchar("status", { length: 50 }).notNull(), // active, cancelled, past_due, pending
+  billingPeriod: varchar("billing_period", { length: 20 }), // monthly, annual
+  amount: integer("amount"), // Amount in cents/smallest currency unit
+  currency: varchar("currency", { length: 3 }).default("KES"), // KES, USD, etc.
+  paymentMethod: varchar("payment_method", { length: 50 }), // pesapal, mpesa, stripe
+  // Pesapal fields
+  orderTrackingId: varchar("order_tracking_id", { length: 255 }),
+  merchantReference: varchar("merchant_reference", { length: 255 }),
+  // M-Pesa fields
+  mpesaCheckoutRequestId: varchar("mpesa_checkout_request_id", { length: 255 }),
+  mpesaReceiptNumber: varchar("mpesa_receipt_number", { length: 255 }),
+  // Stripe fields (deprecated but kept for backward compatibility)
   stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
   stripeSubscriptionId: varchar("stripe_subscription_id", { length: 255 }),
   stripePriceId: varchar("stripe_price_id", { length: 255 }),

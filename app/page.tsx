@@ -254,7 +254,7 @@ export default function HomePage() {
                 <CardTitle>Starter</CardTitle>
                 <CardDescription>Perfect for small businesses</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">$99</span>
+                  <span className="text-4xl font-bold">KES 9,999</span>
                   <span className="text-muted-foreground">/month</span>
                 </div>
               </CardHeader>
@@ -291,7 +291,7 @@ export default function HomePage() {
                 <CardTitle>Pro</CardTitle>
                 <CardDescription>For growing content teams</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">$299</span>
+                  <span className="text-4xl font-bold">KES 29,999</span>
                   <span className="text-muted-foreground">/month</span>
                 </div>
               </CardHeader>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,6 +14,9 @@ import { ArrowLeft, Loader2, Sparkles, FileText } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useQuery } from "@tanstack/react-query"
+
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
 
 const articleSchema = z.object({
   projectId: z.string().min(1, "Please select a project"),
@@ -45,13 +48,22 @@ export default function NewArticlePage() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ArticleForm>({
     resolver: zodResolver(articleSchema),
     defaultValues: {
-      projectId: searchParams.get("project") || "",
+      projectId: "",
     },
   })
+
+  // Set project ID from URL params after component mounts
+  useEffect(() => {
+    const projectId = searchParams.get("project")
+    if (projectId) {
+      setValue("projectId", projectId)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async (data: ArticleForm) => {
     setIsGenerating(true)

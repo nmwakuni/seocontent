@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation"
 import { signUp, signIn } from "@/lib/auth-client"
 import { useToast } from "@/hooks/use-toast"
 
+export const dynamic = "force-dynamic"
+
 export default function SignUpPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
