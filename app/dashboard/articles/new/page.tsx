@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,7 +16,6 @@ import { useToast } from "@/hooks/use-toast"
 import { useQuery } from "@tanstack/react-query"
 
 export const dynamic = "force-dynamic"
-export const runtime = "nodejs"
 
 const articleSchema = z.object({
   projectId: z.string().min(1, "Please select a project"),
@@ -27,7 +26,7 @@ const articleSchema = z.object({
 
 type ArticleForm = z.infer<typeof articleSchema>
 
-export default function NewArticlePage() {
+function NewArticleContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -336,5 +335,17 @@ export default function NewArticlePage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function NewArticlePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <NewArticleContent />
+    </Suspense>
   )
 }

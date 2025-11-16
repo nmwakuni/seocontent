@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useSession } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,13 +11,12 @@ import { Check, CreditCard, Smartphone, Loader2 } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 
 export const dynamic = "force-dynamic"
-export const runtime = "nodejs"
 
 type Plan = "starter" | "pro"
 type BillingPeriod = "monthly" | "annual"
 type PaymentMethod = "pesapal" | "mpesa"
 
-export default function BillingPage() {
+function BillingContent() {
   const session = useSession()
   const { toast } = useToast()
   const searchParams = useSearchParams()
@@ -422,5 +421,17 @@ export default function BillingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BillingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <BillingContent />
+    </Suspense>
   )
 }
